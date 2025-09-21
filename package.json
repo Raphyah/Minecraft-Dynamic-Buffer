@@ -1,0 +1,21 @@
+{
+  "name": "minecraft-dynamic-buffer",
+  "version": "1.0.0",
+  "description": "A workaround to save binary content to dynamic properties.",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Raphyah/Minecraft-Dynamic-Buffer.git"
+  },
+  "author": "Raphyah",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Raphyah/Minecraft-Dynamic-Buffer/issues"
+  },
+  "homepage": "https://github.com/Raphyah/Minecraft-Dynamic-Buffer#readme",
+  "devDependencies": {
+    "@minecraft/server": "^2.1.0"
+  }
+}
