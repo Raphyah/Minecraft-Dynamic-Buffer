@@ -28,6 +28,7 @@ interface DynamicBufferComponent {
  * @param identifier The property identifier.
  * @param buffer The data to be saved. Its byte length can't be greater than 4294967295.
  * @throws {@link TypeError} - Throws if the identifier is not of type string or if it's empty. Throws if buffer is not an `array`, {@link ArrayBuffer}, {@link ArrayBufferView} or `undefined`.
+ * @throws {@link RangeError} - Throws if the provided buffer length is greater than 4294967295.
  */
 const setDynamicBuffer: SetDynamicBufferFn = function (identifier, buffer) {
   if (typeof identifier !== "string") {
@@ -59,7 +60,9 @@ const setDynamicBuffer: SetDynamicBufferFn = function (identifier, buffer) {
   const dataLength = temp.length;
   
   if (dataLength > 4294967295) {
-    
+    throw new RangeError(
+      "Native range check failed. Function argument [1] length must be within the range [0, 4294967295]",
+    );
   }
 
   const totalLength = dataLength + 4;
