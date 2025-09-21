@@ -26,21 +26,17 @@ interface DynamicBufferComponent {
  * It works similarly to {@link module:@minecraft/server.Entity#setDynamicProperty}, but instead of primitives or `Vector3` it expects an array of 8-bit integers, an `ArrayBuffer`, or a view (`TypedArray` or `DataView`).
  *
  * @param identifier The property identifier.
- * @param buffer The data to be saved. Its byte length can't be greater than 4294967295.
+ * @param buffer The data to be saved. Its byte length can't be greater than 20476.
  * @throws {@link TypeError} - Throws if the identifier is not of type string or if it's empty. Throws if buffer is not an `array`, {@link ArrayBuffer}, {@link ArrayBufferView} or `undefined`.
- * @throws {@link RangeError} - Throws if the provided buffer length is greater than 4294967295.
+ * @throws {@link RangeError} - Throws if the provided buffer length is 0 or greater than 20476.
  */
 const setDynamicBuffer: SetDynamicBufferFn = function (identifier, buffer) {
   if (typeof identifier !== "string") {
-    throw new TypeError(
-      "Native type conversion failed. Function argument [0] expected type: string",
-    );
+    throw new TypeError("Invalid identifier: expected a string");
   }
 
   if (!identifier) {
-    throw new TypeError(
-      "Native type conversion failed. Function argument [0] must not be an empty string",
-    );
+    throw new TypeError("Invalid identifier: string can not be empty");
   }
 
   if (buffer === null || buffer === void 0)
@@ -52,41 +48,31 @@ const setDynamicBuffer: SetDynamicBufferFn = function (identifier, buffer) {
     !ArrayBuffer.isView(buffer)
   ) {
     throw new TypeError(
-      "Native variant type conversion failed. Function argument [1] expected type: number[] | ArrayBuffer | ArrayBufferView | undefined",
+      "Invalid buffer: expected one of number[] | ArrayBuffer | ArrayBufferView | undefined",
     );
   }
 
-  const temp = new Uint8Array((buffer as ArrayBufferView).buffer || buffer);
-  const dataLength = temp.length;
-  
-  if (dataLength > 4294967295) {
+  const buf = new Uint8Array((buffer as ArrayBufferView).buffer || buffer);
+  const bufLen = buf.byteLength;
+
+  if (bufLen === 0 || bufLen > 20476) {
     throw new RangeError(
-      "Native range check failed. Function argument [1] length must be within the range [0, 4294967295]",
+      "Invalid buffer: length can not be lesser than 1 or greater than 20476 bytes",
     );
   }
 
-  const totalLength = dataLength + 4;
-  const res = new Uint16Array(Math.ceil((totalLength / 7) * 8));
+  const res = new Uint16Array(Math.ceil((bufLen / 15) * 8) + 1);
 
   let acc = 0;
   let accBits = 0;
+
   let bytePos = 0;
 
-  // Length bytes
-  for (let i = 0; i < 4; i++) {
-    const byte = (dataLength >> (i * 8)) & 255;
-    acc = (acc << 8) | byte;
-    accBits += 8;
-
-    while (accBits >= 15) {
-      accBits -= 15;
-      res[bytePos++] = ((acc >> accBits) & 32767) | 32768;
-    }
-  }
+  res[bytePos++] = bufLen;
 
   // Data bytes
-  for (let i = 0; i < dataLength; i++) {
-    const byte = temp[i];
+  for (let i = 0; i < bufLen; i++) {
+    const byte = buf[i];
     acc = (acc << 8) | byte;
     accBits += 8;
 
@@ -116,15 +102,11 @@ const setDynamicBuffer: SetDynamicBufferFn = function (identifier, buffer) {
  */
 const getDynamicBuffer: GetDynamicBufferFn = function (identifier) {
   if (typeof identifier !== "string") {
-    throw new TypeError(
-      "Native type conversion failed. Function argument [0] expected type: string",
-    );
+    throw new TypeError("Invalid identifier: expected a string");
   }
 
   if (!identifier) {
-    throw new TypeError(
-      "Native type conversion failed. Function argument [0] must not be an empty string",
-    );
+    throw new TypeError("Invalid identifier: string can not be empty");
   }
 
   const str = this.getDynamicProperty(identifier);
@@ -133,38 +115,19 @@ const getDynamicBuffer: GetDynamicBufferFn = function (identifier) {
     return undefined;
   }
 
-  let bufLen = 0;
+  const bufLen = str.charCodeAt(0);
+  const strLen = str.length;
+
+  const res = new ArrayBuffer(bufLen);
+  const buf = new Uint8Array(res);
 
   let acc = 0;
   let accBits = 0;
 
   let bytePos = 0;
 
-  // Length bytes + start of data bytes
-  for (let i = 0; i < 3; i++) {
-    const code = str.charCodeAt(i) ^ 32768;
-    acc = (acc << 15) | code;
-    accBits += 15;
-
-    while (accBits >= 8) {
-      if (bytePos >= 4) break;
-      accBits -= 8;
-      bufLen |= ((acc >> accBits) & 255) << (bytePos * 8);
-      bytePos++;
-    }
-  }
-
-  bufLen >>>= 0;
-
-  bytePos = 0;
-
-  const res = new ArrayBuffer(bufLen);
-  const buf = new Uint8Array(res);
-
-  const strLen = str.length;
-
   // Data bytes
-  for (let i = 3; i < strLen; i++) {
+  for (let i = 1; i < strLen; i++) {
     const code = str.charCodeAt(i) ^ 32768;
     acc = (acc << 15) | code;
     accBits += 15;

@@ -25,7 +25,7 @@ It works similarly to [`setDynamicProperty(identifier: string, value?: boolean |
 - **identifier**: _string_
   - The property identifier.
 - **buffer**?: _number[]_, _ArrayBuffer_, _ArrayBufferView_
-  - The data to be saved. Its byte length can't be greater than 4294967295.
+  - The data to be saved. Its byte length can't be 0 or greater than 20476.
 
 ### getDynamicBuffer
 
@@ -48,7 +48,7 @@ import 'dynamicBuffer.js';
 
 world.beforeEvents.itemUse.subscribe(({ itemStack, source }) => {
   const data = new DataView(
-    source.getDynamicBuffer('super_cool_addon:bytes') || new ArrayBuffer(256)
+    source.getDynamicBuffer('super_cool_addon:bytes') || new ArrayBuffer(256);
   );
   if (itemStack.typeId === 'super_cool_addon:super_cool_item') {
     data.setUint8(23, data.getUint8(23) ? 0 : 1);
