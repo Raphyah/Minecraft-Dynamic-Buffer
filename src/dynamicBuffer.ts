@@ -1,6 +1,8 @@
-// Copyright (c) 2025 Raphyah
-// Licensed under the MIT License. See LICENSE file in the project root for details.
-
+/**
+ * @license
+ * Copyright (c) 2025 Raphyah
+ * Licensed under the MIT License. See LICENSE file in the project root for details.
+ */
 import { ContainerSlot, Entity, ItemStack, World } from "@minecraft/server";
 
 type DynamicPropertyTarget = ContainerSlot | Entity | ItemStack | World;
