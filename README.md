@@ -1,4 +1,4 @@
-# Minecraft-Dynamic-Buffer
+# Minecraft Dynamic Buffer
 
 A workaround to save binary content to dynamic properties.
 
@@ -46,13 +46,13 @@ It works similarly to [`getDynamicProperty(identifier: string): boolean | number
 import { world } from '@minecraft/server';
 import 'dynamicBuffer.js';
 
-world.beforeEvents.itemUse.subscribe(({ itemStack, source }) => {
+world.afterEvents.itemUse.subscribe(({ itemStack, source }) => {
   const data = new DataView(
-    source.getDynamicBuffer('super_cool_addon:bytes') || new ArrayBuffer(256);
+    source.getDynamicBuffer('property_x') || new ArrayBuffer(256),
   );
-  if (itemStack.typeId === 'super_cool_addon:super_cool_item') {
+  if (itemStack.typeId === 'minecraft:stick') {
     data.setUint8(23, data.getUint8(23) ? 0 : 1);
   }
-  source.setDynamicBuffer('super_cool_addon:bytes', data);
+  source.setDynamicBuffer('property_x', data);
 });
 ```
