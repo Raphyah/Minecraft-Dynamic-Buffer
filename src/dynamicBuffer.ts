@@ -25,30 +25,27 @@ interface DynamicBufferComponent {
 
 /**
  * @remarks
- * It works similarly to {@link module:@minecraft/server.Entity#setDynamicProperty}, but instead of primitives or `Vector3` it expects an array of 8-bit integers, an `ArrayBuffer`, or a view (`TypedArray` or `DataView`).
+ * It works similarly to {@link module:@minecraft/server.Entity#setDynamicProperty}, but instead of primitives or `Vector3` it expects an array of 64-bit IEEE-754 double-precision floating-point numbers, an {@link ArrayBuffer}, or an {@link ArrayBufferView}.
  *
  * @param identifier The property identifier.
  * @param buffer The data to be saved. Its byte length can't be greater than 20476.
- * @throws {@link TypeError} - Throws if the identifier is not of type string or if it's empty. Throws if buffer is not an `array`, {@link ArrayBuffer}, {@link ArrayBufferView} or `undefined`.
- * @throws {@link RangeError} - Throws if the provided buffer length is 0 or greater than 20476.
+ * @throws {@link TypeError} - Throws if the identifier is not of type string. Throws if buffer is not an `array`, {@link ArrayBuffer}, {@link ArrayBufferView} or `undefined`.
+ * @throws {@link RangeError} - Throws if the provided buffer length is greater than 20476.
  */
 const setDynamicBuffer: SetDynamicBufferFn = function (identifier, buffer) {
   if (typeof identifier !== "string") {
     throw new TypeError("Invalid identifier: expected a string");
   }
 
-  if (!identifier) {
-    throw new TypeError("Invalid identifier: string can not be empty");
+  if (buffer === null || buffer === void 0) {
+    return this.setDynamicProperty(identifier, buffer);
   }
 
-  if (buffer === null || buffer === void 0)
-    return this.setDynamicProperty(identifier, buffer);
+  if (Array.isArray(buffer)) {
+    buffer = new Float64Array(buffer);
+  }
 
-  if (
-    !Array.isArray(buffer) &&
-    !(buffer instanceof ArrayBuffer) &&
-    !ArrayBuffer.isView(buffer)
-  ) {
+  if (!(buffer instanceof ArrayBuffer) && !ArrayBuffer.isView(buffer)) {
     throw new TypeError(
       "Invalid buffer: expected one of number[] | ArrayBuffer | ArrayBufferView | undefined",
     );
@@ -57,9 +54,9 @@ const setDynamicBuffer: SetDynamicBufferFn = function (identifier, buffer) {
   const buf = new Uint8Array((buffer as ArrayBufferView).buffer || buffer);
   const bufLen = buf.byteLength;
 
-  if (bufLen === 0 || bufLen > 20476) {
+  if (bufLen > 20476) {
     throw new RangeError(
-      "Invalid buffer: length can not be lesser than 1 or greater than 20476 bytes",
+      "Invalid buffer: buffer length can not be greater than 20476 bytes",
     );
   }
 
@@ -96,19 +93,15 @@ const setDynamicBuffer: SetDynamicBufferFn = function (identifier, buffer) {
 
 /**
  * @remarks
- * It works similarly to {@link module:@minecraft/server.Entity#getDynamicProperty}, but it returns an `ArrayBuffer` instead of the same type passed to it, except for invalid data.
+ * It works similarly to {@link module:@minecraft/server.Entity#getDynamicProperty}, but it returns an {@link ArrayBuffer} or `undefined` instead of the same type passed to it.
  *
  * @param identifier The property identifier.
- * @returns Returns the dynamic property data converted back to the array of bytes. `undefined` if the stored data is not of type string.
- * @throws {@link TypeError} - Throws if the identifier is not of type string or if it's empty.
+ * @returns Returns the dynamic property data converted back to an {@link ArrayBuffer}. `undefined` if the stored data is not of type string.
+ * @throws {@link TypeError} - Throws if the identifier is not of type string.
  */
 const getDynamicBuffer: GetDynamicBufferFn = function (identifier) {
   if (typeof identifier !== "string") {
     throw new TypeError("Invalid identifier: expected a string");
-  }
-
-  if (!identifier) {
-    throw new TypeError("Invalid identifier: string can not be empty");
   }
 
   const str = this.getDynamicProperty(identifier);

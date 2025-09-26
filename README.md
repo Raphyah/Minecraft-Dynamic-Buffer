@@ -18,27 +18,27 @@ These methods are available for instances of `ContainerSlot`, `Entity`, `ItemSta
 
 `setDynamicBuffer(identifier: string, buffer?: number[] | ArrayBuffer | ArrayBufferView): void`
 
-It works similarly to [`setDynamicProperty(identifier: string, value?: boolean | number | string | Vector3): void`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#setdynamicproperty), but instead of primitives or `Vector3` it expects an array of 8-bit integers, an `ArrayBuffer`, or a view (`TypedArray` or `DataView`).
+It works similarly to [`setDynamicProperty(identifier: string, value?: boolean | number | string | Vector3): void`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#setdynamicproperty), but instead of primitives or `Vector3` it expects an array of 64-bit IEEE-754 double-precision floating-point numbers, an `ArrayBuffer`, or an `ArrayBufferView`.
 
 #### Parameters
 
 - **identifier**: _string_
   - The property identifier.
 - **buffer**?: _number[]_, _ArrayBuffer_, _ArrayBufferView_
-  - The data to be saved. Its byte length can't be 0 or greater than 20476.
+  - The data to be saved. Its byte length can't be greater than 20476.
 
 ### getDynamicBuffer
 
 `getDynamicBuffer(identifier: string): ArrayBuffer | undefined`
 
-It works similarly to [`getDynamicProperty(identifier: string): boolean | number | string | Vector3`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#getdynamicproperty), but it returns an `ArrayBuffer` instead of the same type passed to it, except for invalid data.
+It works similarly to [`getDynamicProperty(identifier: string): boolean | number | string | Vector3`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#getdynamicproperty), but it returns an `ArrayBuffer` or `undefined` instead of the same type passed to it.
 
 #### Parameters
 
 - **identifier**: _string_
   - The property identifier.
 
-**Returns** _ArrayBuffer_ - Returns the dynamic property data converted back to the array of bytes. `undefined` if the stored data is not of type string.
+**Returns** _ArrayBuffer_ - Returns the dynamic property data converted back to an `ArrayBuffer`. `undefined` if the stored data is not of type string.
 
 ## Example
 
