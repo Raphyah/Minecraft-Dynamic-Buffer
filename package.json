@@ -1,5 +1,6 @@
 {
   "name": "minecraft-dynamic-buffer",
+  "types": "./types/dynamicBuffer.d.ts",
   "version": "1.0.0",
   "description": "A workaround to save binary content to dynamic properties.",
   "directories": {

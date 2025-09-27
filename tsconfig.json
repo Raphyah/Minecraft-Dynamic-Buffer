@@ -8,8 +8,7 @@
     "declarationDir": "./types",
     "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "removeComments": true
+    "forceConsistentCasingInFileNames": true
   },
   "exclude": [ "./node_modules" ],
   "include": [ "./src" ]

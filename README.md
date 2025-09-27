@@ -18,20 +18,20 @@ These methods are available for instances of `ContainerSlot`, `Entity`, `ItemSta
 
 `setDynamicBuffer(identifier: string, buffer?: number[] | ArrayBuffer | ArrayBufferView): void`
 
-It works similarly to [`setDynamicProperty(identifier: string, value?: boolean | number | string | Vector3): void`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#setdynamicproperty), but instead of primitives or `Vector3` it expects an array of 64-bit IEEE-754 double-precision floating-point numbers, an `ArrayBuffer`, or an `ArrayBufferView`.
+It works similarly to [`setDynamicProperty(identifier: string, value?: boolean | number | string | Vector3): void`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity#setdynamicproperty), but instead of primitives or [`Vector3`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/vector3) it expects an [`ArrayLike`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) of 64-bit IEEE-754 double-precision floating-point numbers, an [`ArrayBuffer`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer), an `ArrayBufferView`, or `undefined`.
 
 #### Parameters
 
 - **identifier**: _string_
   - The property identifier.
 - **buffer**?: _number[]_, _ArrayBuffer_, _ArrayBufferView_
-  - The data to be saved. Its byte length can't be greater than 20476.
+  - The data to be saved. Its byte length can't exceed 20476 bytes.
 
 ### getDynamicBuffer
 
 `getDynamicBuffer(identifier: string): ArrayBuffer | undefined`
 
-It works similarly to [`getDynamicProperty(identifier: string): boolean | number | string | Vector3`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#getdynamicproperty), but it returns an `ArrayBuffer` or `undefined` instead of the same type passed to it.
+It works similarly to [`getDynamicProperty(identifier: string): boolean | number | string | Vector3`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#getdynamicproperty), but it returns an [`ArrayBuffer`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) or `undefined` instead of the same type passed to it.
 
 #### Parameters
 
