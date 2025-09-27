@@ -31,7 +31,7 @@ It works similarly to [`setDynamicProperty(identifier: string, value?: boolean |
 
 `getDynamicBuffer(identifier: string): ArrayBuffer | undefined`
 
-It works similarly to [`getDynamicProperty(identifier: string): boolean | number | string | Vector3`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity?view=minecraft-bedrock-stable#getdynamicproperty), but it returns an [`ArrayBuffer`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) or `undefined` instead of the same type passed to it.
+It works similarly to [`getDynamicProperty(identifier: string): boolean | number | string | Vector3`](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/entity#getdynamicproperty), but it returns an [`ArrayBuffer`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) or `undefined` instead of the same type passed to it.
 
 #### Parameters
 
